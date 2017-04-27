@@ -9,7 +9,7 @@ const getMovieData = (id: string) => {
   .then((data: any) => {
     const jsonMovie: any = data.movies[id];
     const movie = new Movie({
-      allocineId: id,
+      _id: id,
       title: jsonMovie.title,
       poster: jsonMovie.poster.file_name,
       releaseDate: jsonMovie.releaseDate.date

@@ -8,10 +8,10 @@ const Movie = new GraphQLObjectType({
   description: "Movie",
   fields: () => {
     return {
-      allocineId: {
+      _id: {
         type: GraphQLString,
         resolve(movie) {
-          return movie.allocineId
+          return movie._id
         }
       },
       title: {

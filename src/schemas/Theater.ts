@@ -8,10 +8,10 @@ const Theater = new GraphQLObjectType({
   description: "Theater",
   fields: () => {
     return {
-      allocineId: {
+      _id: {
         type: GraphQLString,
         resolve(theater) {
-          return theater.allocineId
+          return theater._id
         }
       },
       name: {

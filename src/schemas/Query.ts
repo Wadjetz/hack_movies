@@ -7,9 +7,11 @@ import {
 
 import QLMovie from "./Movie"
 import QLTheater from "./Theater"
+import QLShowtime from "./Showtime"
 
 import Movie from "../models/movies"
 import Theater from "../models/theater"
+import Showtime from "../models/Showtime"
 
 const Query = new GraphQLObjectType({
   name: "Query",
@@ -26,6 +28,12 @@ const Query = new GraphQLObjectType({
         type: new GraphQLList(QLTheater),
         resolve(root, args) {
           return Theater.find({})
+        }
+      },
+      showtime: {
+        type: new GraphQLList(QLShowtime),
+        resolve(root, args) {
+          return Showtime.find({})
         }
       },
     }
