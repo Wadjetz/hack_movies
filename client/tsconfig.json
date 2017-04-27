@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "module": "none",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "outDir": "../public",
+    "pretty": true,
+    "rootDir": ".",
+    "strictNullChecks": true,
+    "target": "es2015"
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
