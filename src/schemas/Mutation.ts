@@ -5,6 +5,8 @@ import {
   GraphQLList
 } from "graphql"
 
+import bootstrap from '../bootstrap'
+
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
   description: "Mutation",
@@ -13,7 +15,7 @@ const Mutation = new GraphQLObjectType({
     bootstrap: {
       type: GraphQLString,
       resolve(root, args) {
-        console.log("TEST");
+        bootstrap();
         return 'TODO';
       }
     }
