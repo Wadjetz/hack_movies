@@ -1,7 +1,7 @@
 import * as express from "express"
 import * as GraphHttp from "express-graphql"
-import schema from "./schemas/schema"
 import "./models/db"
+import schema from "./schemas/schema"
 const APP_PORT = 3000
 
 const app = express()

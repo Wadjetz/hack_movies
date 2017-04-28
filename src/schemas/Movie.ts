@@ -1,7 +1,13 @@
+import * as mongoose from "mongoose"
 import {
   GraphQLObjectType,
   GraphQLString,
+  GraphQLList,
 } from "graphql"
+
+const Showtime = mongoose.model("showtimes");
+
+import QLShowtime from './Showtime'
 
 const Movie = new GraphQLObjectType({
   name: "Movie",
@@ -32,6 +38,12 @@ const Movie = new GraphQLObjectType({
           return movie.releaseDate
         }
       },
+      showtime: {
+        type: new GraphQLList(QLShowtime),
+        resolve(movie) {
+          return Showtime.find({ movieId: movie._id })
+        }
+      }
     }
   }
 })

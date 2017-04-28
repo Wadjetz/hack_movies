@@ -11,13 +11,21 @@ const Showtime = mongoose.model("showtimes");
 const logError = (err: any) => console.error(err)
 const ignoreError = (err: any) => {}
 
-const saveMovie = (id: string, jsonMovie: any) =>
-  new Movie({
+// remove duplicates
+const deDupe = (lst: any[]) =>
+  lst.filter(
+    (elem: any, index:number, self: any[]) => index === self.indexOf(elem)
+  )
+
+const saveMovie = (id: string, jsonMovie: any) => {
+  console.log(jsonMovie.title)
+  return new Movie({
     _id: id,
     title: jsonMovie.title,
     poster: jsonMovie.poster.file_name,
     releaseDate: jsonMovie.releaseDate.date,
   }).save().catch(ignoreError)
+}
 
 const saveTheater = (id: string, jsonTheater: any) => () => {
   const addr: any = jsonTheater.address;
@@ -35,9 +43,7 @@ const saveShowTimes = (movieId: string, theaterId: string, showVersion: any) => 
   Showtime.findOne({ movieId, theaterId, version }).exec(
     (err, res: mongoose.Document) => {
       if (res) {
-        const mergedDates = newDates.concat((res as any).dates).filter(
-          (elem: Date, index:number, self: Date[]) => index === self.indexOf(elem) // remove duplicates
-        )
+        const mergedDates = deDupe(newDates.concat((res as any).dates))
         return res.update(
           { movieId, theaterId, version },
           { $set: { dates: mergedDates } }
@@ -77,22 +83,44 @@ const parseMovieData = (id: string) => (data: any) => {
 
 }
 
-const getMovieData = (id: string, first: boolean) => {
+const DELAY = 1500;
+
+const parseOtherMovies = (obj: any) => {
+  const otherMovies = Object.keys(obj.theaters).map((t:any) => obj.theaters[t].movies);
+  const uniqueOthers = deDupe([].concat( ...otherMovies ))
+  setTimeout(() => getMoviesData(uniqueOthers), DELAY);
+}
+
+const getMoviesData = (ids: string[]) => {
+  if (ids.length > 0) {
+    getMovieData(ids[0], false);
+    setTimeout(() => getMoviesData(ids.slice(1)), DELAY+DELAY*Math.random());
+  }
+}
+
+const getMovieData = (id: string, first: boolean): Promise<void> => {
+  console.log(`Getting data of movie ${id}`)
+  
   const url = `http://www.allocine.fr/_/showtimes/movie-${id}/near-115755/?v=v1.2.2.61`;
-  fetch(url)
+  return fetch(url)
   .then(res => res.json())
-  .then(parseMovieData(id))
+  .then((obj: any) => {
+    const res = parseMovieData(id)(obj)
+    first && parseOtherMovies(obj)
+  })
+  
   /*
-  //jsonfile.readFile(
-    //'/Users/ngl/projects/hackday/hack_movies/src/data.json',
+  jsonfile.readFile(
+    `/Users/ngl/projects/hackday/hack_movies/src/data/${id}.json`,
     (err: any, obj: any) => {
-      parseMovieData(id)(obj);
-      if (first) {
-        // const movies = Object.keys(data)
+      if (obj) {
+        const res = parseMovieData(id)(obj);
+        first && parseOtherMovies(obj)
       }
     }
   )
   */
+  
 }
 
 const run = () => {

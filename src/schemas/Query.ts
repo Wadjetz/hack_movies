@@ -2,16 +2,17 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
-  GraphQLList
+  GraphQLList,
+  GraphQLO,
 } from "graphql"
-
-import QLMovie from "./Movie"
-import QLTheater from "./Theater"
-import QLShowtime from "./Showtime"
 
 import Movie from "../models/movies"
 import Theater from "../models/theater"
 import Showtime from "../models/Showtime"
+
+import QLMovie from "./Movie"
+import QLTheater from "./Theater"
+import QLShowtime from "./Showtime"
 
 const Query = new GraphQLObjectType({
   name: "Query",
@@ -22,6 +23,17 @@ const Query = new GraphQLObjectType({
         type: new GraphQLList(QLMovie),
         resolve(root, args) {
           return Movie.find({})
+        }
+      },
+      movie: {
+        args: {
+          id: {
+            type: new GraphQLNonNull(GraphQLString),
+          }
+        },
+        type: QLMovie,
+        resolve(root, args) {
+          return Movie.find({_id: args.id})
         }
       },
       theaters: {
