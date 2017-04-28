@@ -9,11 +9,11 @@
     "noImplicitAny": true,
     "outDir": "../public",
     "pretty": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "strictNullChecks": true,
     "target": "es2015"
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts"
   ]
 }

@@ -3,7 +3,6 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLList,
-  GraphQLO,
 } from "graphql"
 
 import Movie from "../models/movies"
@@ -33,7 +32,7 @@ const Query = new GraphQLObjectType({
         },
         type: QLMovie,
         resolve(root, args) {
-          return Movie.find({_id: args.id})
+          return Movie.findOne({_id: args.id})
         }
       },
       theaters: {

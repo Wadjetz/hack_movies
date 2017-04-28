@@ -1,3 +1,4 @@
+var path = require('path');
 import * as express from "express"
 import * as GraphHttp from "express-graphql"
 import "./models/db"
@@ -6,9 +7,7 @@ const APP_PORT = 3000
 
 const app = express()
 
-app.get("/", (req, res) => {
-  res.end("Hello World")
-})
+app.use(express.static(path.join(__dirname + '/../public')))
 
 app.use("/graphql", GraphHttp(request => ({
   schema,
