@@ -21,7 +21,7 @@ const Query = new GraphQLObjectType({
       movies: {
         type: new GraphQLList(QLMovie),
         resolve(root, args) {
-          return Movie.find({})
+          return Movie.find({}).sort({releaseDate: -1})
         }
       },
       movie: {
@@ -63,5 +63,3 @@ const Query = new GraphQLObjectType({
 })
 
 export default Query
-
-
