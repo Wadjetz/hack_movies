@@ -19,20 +19,25 @@ const Query = new GraphQLObjectType({
   fields: () => {
     return {
       movies: {
+        args: {
+          title: { type: GraphQLString },
+        },
         type: new GraphQLList(QLMovie),
         resolve(root, args) {
-          return Movie.find({}).sort({releaseDate: -1})
+          const title = args.title;
+          const req = (title && title != '')
+            ? { title: new RegExp(`.*${title}.*`, "i")}
+            : {};
+          return Movie.find(req).sort({releaseDate: -1})
         }
       },
       movie: {
         args: {
-          id: {
-            type: new GraphQLNonNull(GraphQLString),
-          }
+          id: { type: new GraphQLNonNull(GraphQLString) },
         },
         type: QLMovie,
         resolve(root, args) {
-          return Movie.findOne({_id: args.id})
+          return Movie.findOne({ _id: args.id })
         }
       },
       theaters: {
