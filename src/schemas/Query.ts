@@ -41,6 +41,17 @@ const Query = new GraphQLObjectType({
           return Theater.find({})
         }
       },
+      theater: {
+        args: {
+          id: {
+            type: new GraphQLNonNull(GraphQLString),
+          }
+        },
+        type: QLTheater,
+        resolve(root, args) {
+          return Theater.findOne({_id: args.id})
+        }
+      },
       showtimes: {
         type: new GraphQLList(QLShowtime),
         resolve(root, args) {

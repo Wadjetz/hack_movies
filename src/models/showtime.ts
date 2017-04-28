@@ -4,7 +4,7 @@ const ShowtimeSchema = new mongoose.Schema({
   movieId: String,
   theaterId: String,
   version: String,
-  dates: [ Date ]
+  dates: [ Date ],
 })
 
 const Showtime = mongoose.model("showtimes", ShowtimeSchema)
