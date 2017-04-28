@@ -3,12 +3,10 @@ import * as mongoose from "mongoose"
 const ShowtimeSchema = new mongoose.Schema({
     movieId: String,
     theaterId: String,
-    date: Date,
     version: String,
-    times: [Date]
+    dates: [ Date ]
 })
 
-const Showtime = mongoose.model("showtime", ShowtimeSchema)
+const Showtime = mongoose.model("showtimes", ShowtimeSchema)
 
 export default Showtime
-

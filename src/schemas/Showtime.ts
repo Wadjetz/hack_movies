@@ -21,22 +21,16 @@ const Showtime = new GraphQLObjectType({
           return showtime.theaterId
         }
       },
-      date: {
-        type: GraphQLString,
-        resolve(showtime) {
-          return showtime.date
-        }
-      },
       version: {
         type: GraphQLString,
         resolve(showtime) {
           return showtime.version
         }
       },
-      times: {
+      dates: {
         type: new GraphQLList(GraphQLString),
         resolve(showtime) {
-          return showtime.times
+          return showtime.dates
         }
       },
     }

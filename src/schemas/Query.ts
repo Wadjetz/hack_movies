@@ -30,7 +30,7 @@ const Query = new GraphQLObjectType({
           return Theater.find({})
         }
       },
-      showtime: {
+      showtimes: {
         type: new GraphQLList(QLShowtime),
         resolve(root, args) {
           return Showtime.find({})

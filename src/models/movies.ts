@@ -4,7 +4,7 @@ const MovieSchema = new mongoose.Schema({
     _id: String,
     title: String,
     poster: String,
-    releaseDate: Date
+    releaseDate: Date,
 })
 
 const Movie = mongoose.model("movies", MovieSchema)
