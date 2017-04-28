@@ -2,6 +2,8 @@ import fetch from 'node-fetch';
 const jsonfile = require('jsonfile')
 import * as mongoose from "mongoose"
 
+import { ShowtimeModel } from "./models/showtime"
+
 const Movie = mongoose.model("movies");
 const Theater = mongoose.model("theaters");
 const Showtime = mongoose.model("showtimes");
@@ -26,13 +28,28 @@ const saveTheater = (id: string, jsonTheater: any) => () => {
     network: jsonTheater.network.slug,
   }).save().catch(ignoreError)
 }
-
 const saveShowTimes = (movieId: string, theaterId: string, showVersion: any) => () => {
-  return new Showtime({
-    movieId, theaterId,
-    version: showVersion.version,
-    dates: showVersion.showtimes.map( (t: any) => t.showStart )
-  }).save().catch(logError)
+  const version = showVersion.version;
+  const newDates = showVersion.showtimes.map( (t: any) => t.showStart );
+
+  Showtime.findOne({ movieId, theaterId, version }).exec(
+    (err, res: mongoose.Document) => {
+      if (res) {
+        const mergedDates = newDates.concat((res as any).dates).filter(
+          (elem: Date, index:number, self: Date[]) => index === self.indexOf(elem) // remove duplicates
+        )
+        return res.update(
+          { movieId, theaterId, version },
+          { $set: { dates: mergedDates } }
+        ).catch(ignoreError)
+      } else {
+        return new Showtime({
+          movieId, theaterId, version,
+          dates: newDates
+        }).save().catch(ignoreError)
+      }
+    }
+  )
 }
 
 const parseMovieData = (id: string) => (data: any) => {
@@ -60,20 +77,27 @@ const parseMovieData = (id: string) => (data: any) => {
 
 }
 
-const getMovieData = (id: string) => {
+const getMovieData = (id: string, first: boolean) => {
   const url = `http://www.allocine.fr/_/showtimes/movie-${id}/near-115755/?v=v1.2.2.61`;
-  //fetch(url)
-  //.then(res => res.json())
-  //.then(parseMovieData(id))
-  jsonfile.readFile(
-    '/Users/ngl/projects/hackday/hack_movies/src/data.json',
-    (err: any, obj: any) => parseMovieData(id)(obj)
+  fetch(url)
+  .then(res => res.json())
+  .then(parseMovieData(id))
+  /*
+  //jsonfile.readFile(
+    //'/Users/ngl/projects/hackday/hack_movies/src/data.json',
+    (err: any, obj: any) => {
+      parseMovieData(id)(obj);
+      if (first) {
+        // const movies = Object.keys(data)
+      }
+    }
   )
+  */
 }
 
 const run = () => {
   console.log('Initializing bootstrap');
-  getMovieData('226995');
+  getMovieData('226995', true);
 }
 
 export default run
