@@ -2,6 +2,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLInt,
   GraphQLList,
 } from "graphql"
 
@@ -21,15 +22,21 @@ const Query = new GraphQLObjectType({
       movies: {
         args: {
           title: { type: GraphQLString },
+          offset: {
+            type: GraphQLInt,
+          },
+          take: {
+            type: GraphQLInt
+          }
         },
         type: new GraphQLList(QLMovie),
         resolve(root, args) {
           const title = args.title;
-          const req = (title && title != '')
-            ? { title: new RegExp(`.*${title}.*`, "i")}
-            : {};
-          return Movie.find(req).sort({releaseDate: -1})
-        }
+          const req = (title && title !== "")
+              ? {title: new RegExp(`.*${title}.*`, "i")}
+              : {}
+          return Movie.find(req).sort({releaseDate: -1}).skip(args.offset || 0).limit(args.take || 10)
+        },
       },
       movie: {
         args: {
