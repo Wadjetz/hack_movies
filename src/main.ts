@@ -24,7 +24,7 @@ app.use("/graphql", GraphHttp(request => ({
   }
 })))
 
-app.get("/img/:id", (req, res) => {
+app.get("/poster/:id", (req, res) => {
   const { id } = req.params;
   const localPath = path.join(__dirname + '/../public/posters/' + id);
   console.log(localPath)
